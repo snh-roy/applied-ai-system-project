@@ -39,22 +39,15 @@ class MoodAnalyzer:
     def preprocess(self, text: str) -> List[str]:
         """
         Convert raw text into a list of tokens the model can work with.
-
-        TODO: Improve this method.
-
-        Right now, it does the minimum:
-          - Strips leading and trailing whitespace
-          - Converts everything to lowercase
-          - Splits on spaces
-
-        Ideas to improve:
-          - Remove punctuation
-          - Handle simple emojis separately (":)", ":-(", "🥲", "😂")
-          - Normalize repeated characters ("soooo" -> "soo")
         """
+        import re
+        # Remove punctuation except for common emojis characters if needed, 
+        # but let's keep it simple: lower, strip, and split by non-alphanumeric or emojis
         cleaned = text.strip().lower()
-        tokens = cleaned.split()
-
+        # Simple regex to keep words and some emojis (this is basic)
+        tokens = re.findall(r"\w+|[^\w\s]", cleaned, re.UNICODE)
+        
+        print(f"DEBUG: tokens for '{text}' -> {tokens}")
         return tokens
 
     # ---------------------------------------------------------------------
@@ -64,26 +57,37 @@ class MoodAnalyzer:
     def score_text(self, text: str) -> int:
         """
         Compute a numeric "mood score" for the given text.
-
-        Positive words increase the score.
-        Negative words decrease the score.
-
-        TODO: You must choose AT LEAST ONE modeling improvement to implement.
-        For example:
-          - Handle simple negation such as "not happy" or "not bad"
-          - Count how many times each word appears instead of just presence
-          - Give some words higher weights than others (for example "hate" < "annoyed")
-          - Treat emojis or slang (":)", "lol", "💀") as strong signals
         """
-        # TODO: Implement this method.
-        #   1. Call self.preprocess(text) to get tokens.
-        #   2. Loop over the tokens.
-        #   3. Increase the score for positive words, decrease for negative words.
-        #   4. Return the total score.
-        #
-        # Hint: if you implement negation, you may want to look at pairs of tokens,
-        # like ("not", "happy") or ("never", "fun").
-        pass
+        tokens = self.preprocess(text)
+        score = 0
+        negation_words = {"not", "no", "never", "n't", "don't", "can't", "won't"}
+        
+        skip_next = False
+        for i in range(len(tokens)):
+            if skip_next:
+                skip_next = False
+                continue
+                
+            token = tokens[i]
+            
+            # Simple negation handling: "not happy" -> negative score
+            if token in negation_words and i + 1 < len(tokens):
+                next_token = tokens[i+1]
+                if next_token in self.positive_words:
+                    score -= 1 # "not happy" is negative
+                    skip_next = True
+                    continue
+                elif next_token in self.negative_words:
+                    score += 1 # "not bad" is positive
+                    skip_next = True
+                    continue
+
+            if token in self.positive_words:
+                score += 1
+            elif token in self.negative_words:
+                score -= 1
+                
+        return score
 
     # ---------------------------------------------------------------------
     # Label prediction
@@ -92,25 +96,15 @@ class MoodAnalyzer:
     def predict_label(self, text: str) -> str:
         """
         Turn the numeric score for a piece of text into a mood label.
-
-        The default mapping is:
-          - score > 0  -> "positive"
-          - score < 0  -> "negative"
-          - score == 0 -> "neutral"
-
-        TODO: You can adjust this mapping if it makes sense for your model.
-        For example:
-          - Use different thresholds (for example score >= 2 to be "positive")
-          - Add a "mixed" label for scores close to zero
-        Just remember that whatever labels you return should match the labels
-        you use in TRUE_LABELS in dataset.py if you care about accuracy.
         """
-        # TODO: Implement this method.
-        #   1. Call self.score_text(text) to get the numeric score.
-        #   2. Return "positive" if the score is above 0.
-        #   3. Return "negative" if the score is below 0.
-        #   4. Return "neutral" otherwise.
-        pass
+        score = self.score_text(text)
+        
+        if score > 0:
+            return "positive"
+        elif score < 0:
+            return "negative"
+        else:
+            return "neutral"
 
     # ---------------------------------------------------------------------
     # Explanations (optional but recommended)

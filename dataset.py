@@ -23,6 +23,14 @@ POSITIVE_WORDS = [
     "chill",
     "relaxed",
     "amazing",
+    "fire",
+    "sick",
+    "proud",
+    "favorite",
+    "🔥",
+    "😊",
+    "😂",
+    "✨",
 ]
 
 NEGATIVE_WORDS = [
@@ -36,6 +44,12 @@ NEGATIVE_WORDS = [
     "stressed",
     "hate",
     "boring",
+    "failed",
+    "exhausted",
+    "💀",
+    "🥲",
+    "😒",
+    "😭",
 ]
 
 # ---------------------------------------------------------------------
@@ -50,6 +64,18 @@ SAMPLE_POSTS = [
     "This is fine",
     "So excited for the weekend",
     "I am not happy about this",
+    "no cap this burger is fire 🔥",
+    "I lowkey failed that test but it's fine 🥲",
+    "waking up at 5am is my favorite thing ever",
+    "The weather is just okay today",
+    "highkey stressed for the final 💀",
+    "manifesting a good grade today",
+    "it is what it is",
+    "I'm so over this week already",
+    "This movie was sick!",
+    "I love getting stuck in traffic",
+    "I'm fine 🙂",
+    "I'm exhausted but proud of myself",
 ]
 
 # Human labels for each post above.
@@ -65,6 +91,18 @@ TRUE_LABELS = [
     "neutral",   # "This is fine"
     "positive",  # "So excited for the weekend"
     "negative",  # "I am not happy about this"
+    "positive",  # "no cap this burger is fire 🔥"
+    "mixed",     # "I lowkey failed that test but it's fine 🥲"
+    "negative",  # "waking up at 5am is my favorite thing ever" (sarcasm)
+    "neutral",   # "The weather is just okay today"
+    "negative",  # "highkey stressed for the final 💀"
+    "positive",  # "manifesting a good grade today"
+    "neutral",   # "it is what it is"
+    "negative",  # "I'm so over this week already"
+    "positive",  # "This movie was sick!" (slang)
+    "negative",  # "I love getting stuck in traffic" (sarcasm)
+    "neutral",   # "I'm fine 🙂"
+    "mixed",     # "I'm exhausted but proud of myself"
 ]
 
 # TODO: Add 5-10 more posts and labels.
